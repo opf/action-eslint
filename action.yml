@@ -63,6 +63,8 @@ runs:
         INPUT_ESLINT_FLAGS: ${{ inputs.eslint_flags }}
         INPUT_WORKDIR: ${{ inputs.workdir }}
         INPUT_TOOL_NAME: ${{ inputs.tool_name }}
+        BASE_REF: ${{ github.event.pull_request.base.sha }}
+        HEAD_REF: ${{ github.sha }}
 branding:
   icon: 'alert-octagon'
   color: 'blue'

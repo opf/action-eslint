@@ -11,17 +11,18 @@ echo '::group::🐶 Installing reviewdog ... https://github.com/reviewdog/review
 curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b "${TEMP_PATH}" "${REVIEWDOG_VERSION}" 2>&1
 echo '::endgroup::'
 
-if [ ! -f "$(npm bin)/eslint" ]; then
-  echo '::group:: Running `npm install` to install eslint ...'
-  npm install
-  echo '::endgroup::'
-fi
+cd frontend
+echo '::group:: Installing dependenices 🐶 ...'
+npm install
+echo '::endgroup::'
 
-echo "eslint version:$($(npm bin)/eslint --version)"
+echo '::group:: Getting changed files list'
+CHANGED_FILES=$(git diff --name-only "${BASE_REF}..${HEAD_REF}" '**/*.js' '**/*.ts')
+echo $CHANGED_FILES
+echo '::endgroup::'
 
 echo '::group:: Running eslint with reviewdog 🐶 ...'
-$(npm bin)/eslint -f="${ESLINT_FORMATTER}" ${INPUT_ESLINT_FLAGS:-'.'} \
-  | reviewdog -f=rdjson \
+$(npm bin)/eslint -f="${ESLINT_FORMATTER}" -c .eslintrc.js "${CHANGED_FILES}" | reviewdog -f=rdjson \
       -name="${INPUT_TOOL_NAME}" \
       -reporter="${INPUT_REPORTER:-github-pr-review}" \
       -filter-mode="${INPUT_FILTER_MODE}" \
