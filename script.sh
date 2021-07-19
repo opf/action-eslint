@@ -17,7 +17,7 @@ npm install
 echo '::endgroup::'
 
 echo '::group:: Getting changed files list'
-CHANGED_FILES=$(git diff --name-only "${BASE_REF}..${HEAD_REF}" '**/*.js' '**/*.ts' | cut -f 2-1000 -d '/' | tr '\n' ' ')
+CHANGED_FILES=$(git diff --diff-filter=d --name-only "${BASE_REF}..${HEAD_REF}" '**/*.js' '**/*.ts' | cut -f 2-1000 -d '/' | tr '\n' ' ')
 echo "$CHANGED_FILES"
 echo '::endgroup::'
 
